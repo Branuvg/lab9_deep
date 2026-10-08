@@ -53,24 +53,24 @@ Todo va en **`lab9.ipynb`**. Al ejecutar las secciones de las Tasks 1 y 2 quedan
 
 ## Reparto de las Tasks 3 y 4
 
-### Persona 1 – Tasks 3.1 a 3.4 (modelo, entrenamiento, muestreo y guía)
+### Persona 1 – Tasks 3.1, 3.2, 3.3 y 3.5(d) (modelo, entrenamiento y muestreo)
 * **3.1** U-Net pequeña: nivel 28×28 con 32 canales, nivel 14×14 con 64, cuello de botella a 14×14, subida con skips concatenados y conv final a 1 canal. Embedding sinusoidal de t (fórmula del positional encoding de la Semana 6) + MLP; clase con `nn.Embedding(11, d)` (10 = condición nula); la suma se inyecta con broadcasting en cada bloque. Reportar el número de parámetros.
-* **3.2** Entrenar 30 épocas (batch 128, lr 2e-4, `p_uncond = 0.1`, t uniforme, `q_sample`, MSE entre ε y ε̂). Gráfica de pérdida por época y pérdida de validación en 10 intervalos de t de 100 pasos.
-* **3.3** Muestreo ancestral escrito a mano (σ²_t = β_t, z = 0 en el último paso); cuadrícula 10×10 con w = 1, recortando a [−1,1].
-* **3.4** Guía sin clasificador, 50 imágenes por clase para w ∈ {1, 3, 7} (guardarlas), clasificador con ≥ 88% en validación, fidelidad, diversidad (y la de 50 reales por clase), tabla con tiempo por 100 imágenes y figura de 10 muestras de una clase por cada w.
+* **3.2** Entrenar 30 épocas (batch 128, lr 2e-4, `p_uncond = 0.1`, t uniforme, `q_sample`, MSE entre ε y ε̂) y guardar `checkpoints/unet_cfg.pt`. Gráfica de pérdida por época y pérdida de validación en 10 intervalos de t de 100 pasos.
+* **3.3** Muestreo ancestral escrito a mano (σ²_t = β_t, z = 0 en el último paso); cuadrícula 10×10 con w = 1, recortando a [−1,1]. Escribirlo como una función reutilizable que reciba la predicción de ruido, porque la persona 2 le agrega la guía.
+* **3.5(d)** Intervalo de t con pérdida mayor y menor en su gráfica de la 3.2, relacionado con el SNR y con la predicción de la Task 2.5(b): máxima en t ∈ [1,100] y casi nula para t > 700. Si necesita una celda de apoyo, va al final de sus celdas, después de la 3.3.
 * Es el camino crítico: conviene alguien con GPU (o Colab con GPU) y empezar cuanto antes.
 
-### Persona 2 – Task 3.5 (análisis de los resultados de difusión)
-* **(a)** Cambio de fidelidad y diversidad al aumentar w; clase cuya diversidad cae más entre w = 1 y w = 7 y una hipótesis respaldada por los datos.
-* **(b)** Matriz de confusión del clasificador sobre las imágenes generadas con w = 1, par más confundido y si es defecto del generador, del clasificador o de las clases (con imágenes).
-* **(c)** Demostración de que la guía corresponde a p̃(x|c) ∝ p(x) p(c|x)^w (score s ≈ −ε_θ/√(1 − ᾱ_t) y Bayes sobre gradientes de logaritmos) y qué pasa con la diversidad al crecer w.
-* **(d)** Intervalo de t con pérdida mayor y menor en la gráfica de la 3.2, relacionado con el SNR y con la predicción de la Task 2.5(b): máxima en t ∈ [1,100] y casi nula para t > 700.
-* La demostración (c) se puede ir escribiendo desde ya; lo demás necesita los resultados de la persona 1.
+### Persona 2 – Tasks 3.4 y 3.5(a), (b), (c) (guía sin clasificador y su análisis)
+* **3.4** Guía sin clasificador sobre el muestreo de la persona 1 (w = 1 equivale al condicional puro), 50 imágenes por clase para w ∈ {1, 3, 7} (guardarlas en `results/samples_w*.pt`), clasificador con ≥ 88% en validación (`checkpoints/classifier.pt`), fidelidad, diversidad (y la de 50 reales por clase), tabla con tiempo por 100 imágenes y figura de 10 muestras de una clase por cada w.
+* **3.5(a)** Cambio de fidelidad y diversidad al aumentar w; clase cuya diversidad cae más entre w = 1 y w = 7 y una hipótesis respaldada por los datos.
+* **3.5(b)** Matriz de confusión del clasificador sobre las imágenes generadas con w = 1, par más confundido y si es defecto del generador, del clasificador o de las clases (con imágenes).
+* **3.5(c)** Demostración de que la guía corresponde a p̃(x|c) ∝ p(x) p(c|x)^w (score s ≈ −ε_θ/√(1 − ᾱ_t) y Bayes sobre gradientes de logaritmos) y qué pasa con la diversidad al crecer w.
+* Mientras la persona 1 entrena, puede ir entrenando el clasificador (solo usa imágenes reales) y escribiendo la demostración (c), en un borrador que agrega al notebook en su turno.
 
 ### Persona 3 – Task 4 (comparación y pass@k)
 * **4.1** Nitidez (`sharpness`, en [0,1]: difusión con `(x+1)/2`) de 500 imágenes de difusión con w = 1 (las de la 3.4), 500 del VAE con β = 1 y 500 reales; tiempo de generar 100 imágenes con el VAE (1 evaluación de red) y con la difusión sin guía (1 000), y su razón; ubicación de cada modelo en el mapa nitidez / velocidad / estabilidad y cómo acortar la difusión.
 * **4.2** pass@k: estimador insesgado para k = 1, 5, 10 (pasos de P2 con k = 5), fórmula de P2 y menor k con pass@k > 0.9, comparación y demostración frente al estimador ingenuo, y el análisis del agente con 10 reintentos.
-* La 4.2 no depende de nadie: se puede resolver desde ya (en un borrador) y agregar al notebook en su turno. La 4.1 necesita las muestras de la persona 1.
+* La 4.2 no depende de nadie: se puede resolver desde ya (en un borrador) y agregar al notebook en su turno. La 4.1 necesita las muestras de la persona 2.
 
 ## Herramientas
 
