@@ -1,0 +1,12 @@
+# PyTorch con CUDA 12.8 (RTX serie 50):
+#   pip install torch torchvision --index-url https://download.pytorch.org/whl/cu128
+torch
+torchvision
+numpy
+matplotlib
+jupyter
+ipykernel
+# sólo para generar el documento de respuestas (tools/)
+python-docx
+latex2mathml
+lxml
