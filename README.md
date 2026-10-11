@@ -6,8 +6,12 @@ Enunciado completo: [`CC3045_Laboratorio9.md`](CC3045_Laboratorio9.md).
 |---|---|---|
 | Task 1 – VAE | ✅ hecho | `lab9.ipynb` (secciones Task 1.x) |
 | Task 2 – Proceso forward | ✅ hecho | `lab9.ipynb` (secciones Task 2.x) |
-| Task 3 – Difusión condicional + CFG | ⏳ pendiente | `lab9.ipynb`, ver reparto abajo |
-| Task 4 – Comparación y pass@k | ⏳ pendiente | `lab9.ipynb`, ver reparto abajo |
+| Task 3 – Difusión condicional + CFG | ✅ hecho | `lab9.ipynb` (secciones Task 3.x), resultados en `results/results_t3*.json` |
+| Task 4.1 – VAE vs difusión | 🟡 respuestas escritas, falta correr las celdas en GPU | `lab9.ipynb` (sección Task 4.1) |
+| Task 4.2 – pass@k | ✅ hecho | `lab9.ipynb` (sección Task 4.2) |
+| Documento PDF de respuestas | ⏳ pendiente | `tools/` (plantilla Word), falta incluir las Tasks 3.4, 3.5 y 4 |
+
+Para cerrar la Task 4.1, ejecutar el notebook completo en una GPU: las celdas de la 4.1(b) miden el tiempo del VAE y de la difusión en la misma sesión y guardan los números en `results/results_t4.json`. Los tiempos del texto (VAE ≈ 1.5 ms medido en CPU, difusión 4.77 s medida en GPU) deben reemplazarse por esos valores si difieren.
 
 ## Preparar el entorno
 
@@ -51,7 +55,7 @@ Todo va en **`lab9.ipynb`**. Al ejecutar las secciones de las Tasks 1 y 2 quedan
 * Figuras en `figures/` con prefijo de la task (`t3_2_...png`, `t4_1_...png`) y números en `results/`.
 * Respuestas en el documento del equipo con el mismo formato de las Tasks 1 y 2: párrafos normales debajo de cada inciso, con figuras y tablas.
 
-## Reparto de las Tasks 3 y 4
+## Reparto de las Tasks 3 y 4 (histórico, ya completado)
 
 ### Persona 1 – Tasks 3.1, 3.2, 3.3 y 3.5(d) (modelo, entrenamiento y muestreo)
 * **3.1** U-Net pequeña: nivel 28×28 con 32 canales, nivel 14×14 con 64, cuello de botella a 14×14, subida con skips concatenados y conv final a 1 canal. Embedding sinusoidal de t (fórmula del positional encoding de la Semana 6) + MLP; clase con `nn.Embedding(11, d)` (10 = condición nula); la suma se inyecta con broadcasting en cada bloque. Reportar el número de parámetros.
